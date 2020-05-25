@@ -14,13 +14,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-// menambahkan route untuk person
-Route::get('/person','PersonController@all');
-Route::get('/person/{id}','PersonController@show');
-Route::post('/person','PersonController@store');
-Route::put('/person/{id}','PersonController@update');
-Route::delete('/person/{id}','PersonController@delete');
+
+Route::middleware('cors')->group(function(){
+    // menambahkan route untuk person
+    Route::get('/person','PersonController@all');
+    Route::get('/person/{id}','PersonController@show');
+    Route::post('/person','PersonController@store');
+    Route::put('/person/{id}','PersonController@update');
+    Route::delete('/person/{id}','PersonController@delete');
+
+    // menambahkan route untuk zakat
+    Route::get('/zakat','ZakatController@all')->middleware('jwt.verify');
+    Route::get('/zakat/{id}','ZakatController@show')->middleware('jwt.verify');
+    Route::post('/zakat','ZakatController@store')->middleware('jwt.verify');
+    Route::put('/zakat/{id}','ZakatController@update')->middleware('jwt.verify');
+    Route::delete('/zakat/{id}','ZakatController@delete')->middleware('jwt.verify');
+    Route::get('/zakatall','ArticleController@index');
+
+    // Auth
+    Route::post('register', 'UserController@register');
+    Route::post('login', 'UserController@login');
+    Route::get('book', 'BookController@book');
+
+    Route::get('bookall', 'BookController@bookAuth')->middleware('jwt.verify');
+    Route::get('user', 'UserController@getAuthenticatedUser')->middleware('jwt.verify');
+
+    // pagination
+    Route::get('/pegawai','PegawaiController@index');    
+
+});

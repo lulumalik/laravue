@@ -1,1 +1,59 @@
-//
+@import "tailwindcss/base";
+
+@import "tailwindcss/components";
+
+@import "tailwindcss/utilities";
+
+@import url('https://fonts.googleapis.com/css?family=Karla:400,700&display=swap');
+
+.font-family-karla {
+    font-family: karla;
+}
+
+.bg-sidebar {
+    background: #4a5568;
+}
+
+.cta-btn {
+    color: #4a5568;
+}
+
+.upgrade-btn {
+    background: #2d3748;
+}
+
+.upgrade-btn:hover {
+    background: #00ce78;
+}
+
+.active-nav-link {
+    background: #2d3748;
+}
+
+.nav-item:hover {
+    background: #2d3748;
+}
+
+.account-link:hover {
+    background: #2d3748;
+}
+
+/* top-left border-radius */
+table tr:first-child th:first-child {
+    border-top-left-radius: 6px;
+}
+
+/* top-right border-radius */
+table tr:first-child th:last-child {
+    border-top-right-radius: 6px;
+}
+
+/* bottom-left border-radius */
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 6px;
+}
+
+/* bottom-right border-radius */
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 6px;
+}
