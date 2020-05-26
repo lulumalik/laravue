@@ -20,6 +20,6 @@ class ArticleController extends Controller
             array_push($showPost,$post);
         }
     }
-    return response()->json([$email => $showPost], 200);
+    return response()->json($showPost, 200);
    }
 }

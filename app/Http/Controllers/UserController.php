@@ -24,11 +24,9 @@ class UserController extends Controller
         }
 
         $payloadable = [
-            'name' => $request->email,
+            'email' => $request->email,
         ];
-        $user = User::where( 'email', $request->email )->first();
-    
-        $token = JWTAuth::fromUser($user, $payloadable);
+        $token = JWTAuth::claims($payloadable)->attempt($credentials);
 
         return response()->json(['token' => $token]);
     }

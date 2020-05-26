@@ -9,6 +9,9 @@ import Axios from 'axios'
 import App from '../component/app.vue';
 import Admin from '../component/admin.vue'
 import Home from "../component/home.vue"
+import MainAdmin from "../component/mainAdmin.vue"
+import MainDiagram from "../component/mainDiagram.vue"
+import Login from "../component/login.vue"
 
 Vue.prototype.$axios = Axios;
 Vue.prototype.$baseUrl = 'http://127.0.0.1:8000/api/';
@@ -17,11 +20,16 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
-        count: 0
+        inputMoment: false,
+        inputPostZakat: [],
+        refreshForm: {}
     },
     mutations: {
-        increment(state) {
-            state.count++
+        dynamic(state, data) {
+            state[data.key] = data.value
+        },
+        pushPostZakat(state, data) {
+            state.inputPostZakat.push(data)
         }
     }
 })
@@ -31,9 +39,29 @@ const routes = [{
     path: '/',
     component: Home,
 }, {
+    name: 'login',
+    path: '/login',
+    component: Login
+}, {
     name: 'admin',
     path: '/admin',
-    component: Admin
+    component: Admin,
+    children: [
+        {
+          // UserProfile will be rendered inside User's <router-view>
+          // when /user/:id/profile is matched
+          name: 'Dashboard',
+          path: 'main',
+          component: MainAdmin
+        },
+        {
+          // UserPosts will be rendered inside User's <router-view>
+          // when /user/:id/posts is matched
+          name: 'Diagram',
+          path: 'diagram',
+          component: MainDiagram
+        }
+      ]
 }]
 
 const router = new VueRouter({

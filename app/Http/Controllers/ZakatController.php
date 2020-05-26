@@ -24,7 +24,7 @@ class ZakatController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|image|mimes:jpeg,png,jpg|max:2048',
+            'file' => 'max:2048',
             'deskripsi' => 'required',
             'nama' => 'required',
             'jenis' => 'required',
@@ -52,22 +52,36 @@ class ZakatController extends Controller
 
         // menyimpan data file yang diupload ke variabel $file
         $file = $request->file('file');
-    
-        $nama_file = time()."_".$file->getClientOriginalName();
-    
+
+        if ($file) {
+            
+            $nama_file = time()."_".$file->getClientOriginalName();
+
             // isi dengan nama folder tempat kemana file diupload
-        $tujuan_upload = 'data_file';
-        $file->move($tujuan_upload,$nama_file);
-        
-		return Zakat::create([
-            'id_post' => $id,
-			'file' => $nama_file,
-            'deskripsi' => $request->deskripsi,
-            'nama' => $request->nama,
-            'jenis' => $request->jenis,
-            'jumlah' => $request->jumlah,
-            'keterangan_jumlah' => $request->keterangan_jumlah,
-		]);
+            $tujuan_upload = 'data_file';
+            $file->move($tujuan_upload,$nama_file);
+
+            return Zakat::create([
+                'id_post' => $id,
+                'file' => $nama_file,
+                'deskripsi' => $request->deskripsi,
+                'nama' => $request->nama,
+                'jenis' => $request->jenis,
+                'jumlah' => $request->jumlah,
+                'keterangan_jumlah' => $request->keterangan_jumlah,
+            ]);
+        } else {
+            return Zakat::create([
+                'id_post' => $id,
+                'file' => 'no image',
+                'deskripsi' => $request->deskripsi,
+                'nama' => $request->nama,
+                'jenis' => $request->jenis,
+                'jumlah' => $request->jumlah,
+                'keterangan_jumlah' => $request->keterangan_jumlah,
+            ]);
+        }
+        	
     }
 
     // mengubah data
@@ -81,9 +95,18 @@ class ZakatController extends Controller
     // menghapus data
     public function delete($id)
     {
+        $user = JWTAuth::parseToken()->authenticate();
+        $idUser = $user->id;
         $person = Zakat::find($id);
         $person->delete();
-        // cara return response object
-        return response()->json(['response' => 'success', 'id_deleted' => $id]);
+        $artikel = Zakat::all();
+        $showPost = array();
+        foreach ($artikel as $post) {
+            $postId = $post->id_post;
+            if ($postId === $idUser) {
+                array_push($showPost,$post);
+            }
+        }
+        return response()->json($showPost, 200);
     }
 }

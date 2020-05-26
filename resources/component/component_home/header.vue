@@ -4,10 +4,10 @@
     <nav id="header" class="fixed w-full z-30 top-0 text-white">
       <div class="w-full container mx-auto flex flex-wrap bg-gray-800 sm:bg-transparent  items-center justify-between mt-0 py-2">
         <div class="pl-4 flex items-center">
-          <a
+          <router-link
             class="toggleColour text-white no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
-            href="#"
-          >Mosque`st</a>
+            to="/"
+          >Mosque`st</router-link>
         </div>
 
         <div class="block lg:hidden pr-4">
@@ -30,9 +30,9 @@
             style="width:95%"
             class="absolute left-0 ml-2 right-0 bg-white text-black rounded-lg shadow-lg py-2 mt-4"
           >
-            <a href="#" class="block px-4 py-2 account-link hover:text-white">Account</a>
-            <a href="#" class="block px-4 py-2 account-link hover:text-white">Support</a>
-            <a href="#" class="block px-4 py-2 account-link hover:text-white">Sign Out</a>
+            <router-link to="/admin/main" class="block px-4 py-2 account-link hover:text-white" v-if="isToken">Admin</router-link>
+            <router-link to="/login" class="block px-4 py-2 account-link hover:text-white" v-if="isToken">Login</router-link>
+            <router-link to="#" class="block px-4 py-2 account-link hover:text-white">Support</router-link>
           </div>
         </div>
 
@@ -42,7 +42,8 @@
         >
           <ul class="list-reset lg:flex justify-end flex-1 items-center">
             <li class="mr-3">
-              <a class="inline-block py-2 px-4 text-white font-bold no-underline" href="#">Admin</a>
+              <router-link to="/admin/main" class="inline-block py-2 px-4 text-white font-bold no-underline" v-if="isToken">Admin</router-link>
+              <router-link to="/login" class="inline-block py-2 px-4 text-white font-bold no-underline" v-else>Login</router-link>
             </li>
           </ul>
           <button
@@ -62,14 +63,14 @@
         <div
           class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left"
         >
-          <p class="uppercase tracking-loose w-full">Kini management admin masjid lebih mudah !</p>
-          <h1 class="my-4 text-4xl lg:text-5xl font-bold leading-tight">Tak perlu ribet dan minder !</h1>
+          <p class="uppercase tracking-loose w-full">Kelola Masjid</p>
+          <h1 class="my-4 text-4xl lg:text-5xl font-bold leading-tight">Pengelolaan sederhana DKM.</h1>
           <p
             class="leading-normal text-1xl lg:text-2xl mb-8"
-          >Aplikasi gratis untuk management admin di dalam masjid, pelaporan, dan publikasi dalam sekali klik</p>
+          >Aplikasi gratis! pengelolaan masjid</p>
 
           <button
-            class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-4 py-4 px-6 lg:py-4 lg:px-8 shadow-lg"
+            class="mx-auto lg:mx-0 my-10 hover:underline bg-white text-gray-800 font-bold rounded-full my-4 py-4 px-6 lg:py-4 lg:px-8 shadow-lg"
           >Daftar Sekarang</button>
         </div>
         <!--Right Col-->
@@ -77,7 +78,7 @@
           <div class="flex flex-col md:flex-row">
             <div class="main-content flex-1 mt-12 md:mt-2 pb-24 md:pb-5">
               <div class="flex flex-wrap justify-center">
-                <div class="w-full sm:w-1/2 xl:w-1/3 p-3" v-for="(card, index) in promote" :key="index">
+                <div class="w-full sm:w-1/2 p-3" v-for="(card, index) in promote" :key="index">
                   <!--Metric Card-->
                   <div :class="card.color" class="bg-green-100 border-b-4 rounded-lg shadow-lg p-5">
                     <div class="flex flex-row items-center">
@@ -136,25 +137,30 @@
 
 <script>
 export default {
+  computed: {
+    isToken() {
+      return localStorage.getItem("users") ? true : false
+    }
+  },
   data() {
     return {
       isOpen: false,
       promote: [
           {
               icon: 'fa fa-wallet',
-              title: '100% Gratis',
+              title: '100% Gratis tanpa pungutan',
               color: 'border-green-600',
               bg: 'bg-green-600'
           },
           {
               icon: 'fa fa-book-reader',
-              title: 'Tampilan sederhana',
+              title: 'Tampilan sederhana dan mobile friendly',
               color: 'border-pink-600',
               bg: 'bg-pink-600'
           },
           {
               icon: 'fa fa-download',
-              title: 'Export data',
+              title: 'Export data table',
               color: 'border-indigo-600',
               bg: 'bg-indigo-600'
           }
