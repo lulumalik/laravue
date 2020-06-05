@@ -35,12 +35,17 @@ Route::middleware('cors')->group(function(){
     Route::delete('/zakat/{id}','ZakatController@delete')->middleware('jwt.verify');
     Route::get('/zakatall','ArticleController@index');
 
+    // add package
+    Route::post('package', 'PackageController@store');
+    Route::put('package/{id}', 'PackageController@update');
+    Route::get('package', 'PackageController@all');
+    
     // Auth
     Route::post('register', 'UserController@register');
     Route::post('login', 'UserController@login');
-    Route::get('book', 'BookController@book');
-
-    Route::get('bookall', 'BookController@bookAuth')->middleware('jwt.verify');
+    Route::post('anggota', 'UserController@postAnggota');
+    Route::post('regpack', 'UserController@postPackage');
+    Route::get('user/{id}', 'UserController@getUser');
     Route::get('user', 'UserController@getAuthenticatedUser')->middleware('jwt.verify');
 
     // pagination

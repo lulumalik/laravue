@@ -1,14 +1,17 @@
 <template>
   <div class="leading-normal tracking-normal text-white gradient">
     <headerHome />
+    <price />
   </div>
 </template>
 
 <script>
 import headerHome from "./component_home/header";
+import price from "./component_home/price";
 export default {
   components: {
-    headerHome
+    headerHome,
+    price
   }
 };
 </script>

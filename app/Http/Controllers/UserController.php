@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
+use DB;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class UserController extends Controller
@@ -22,9 +23,8 @@ class UserController extends Controller
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
-
         $payloadable = [
-            'email' => $request->email,
+            'email' => $request->email
         ];
         $token = JWTAuth::claims($payloadable)->attempt($credentials);
 
@@ -42,16 +42,57 @@ class UserController extends Controller
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
+        $email = $request->get('email');
 
         $user = User::create([
             'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
+            'email' => $email,
+            'anggota' => null,
+            'password' => Hash::make($request->get('password'))
+        ]);
+        $payloadable = [
+            'email' => $request->email
+        ];
+        $token = JWTAuth::customClaims($payloadable)->fromUser($user);
+
+        return response()->json(['token' => $token]);
+    }
+
+    public function postPackage(Request $request)
+    {   
+        try {
+            // attempt to verify the credentials and create a token for the user
+            $user = JWTAuth::parseToken()->authenticate();
+            $id = $user->id;
+            $package = $request->package;
+            $person = User::find($id);
+            $person->update([
+                'package' => $package,
+            ]);
+            return response()->json(['token' => $person]);
+        } catch (Throwable $e) {
+            return false;
+        }
+
+       
+    }
+
+    public function postAnggota(Request $request)
+    {
+        $user_id = $request->id;
+        
+        $person = User::find($user_id);
+        $person->update([
+            'anggota' => $request->anggota,
         ]);
 
-        $token = JWTAuth::fromUser($user);
+        return response()->json(['data' => $person]);
+    }
 
-        return response()->json(compact('user','token'),201);
+    public function getUser($id)
+    {
+        $person = User::find($id);
+        return response()->json($person);
     }
 
     public function getAuthenticatedUser()
